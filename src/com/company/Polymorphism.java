@@ -39,6 +39,7 @@ public class Polymorphism {
 
 
         // reads from current type parameter to bottom
+        // upper-bound animal
         // 1b. 'extends' - polymorphic assignments
         // Note: extends is read-only
         List<? extends Animal> animals1 = new ArrayList<Animal>();
@@ -52,8 +53,10 @@ public class Polymorphism {
         // cant read above Animal
 
 
+        // lower-bound dogs
         // from current type parameter to above
         // 1c. 'super' - polymorphic assignments
+        // Note: super let's you modify the list  -  modifiable
         List<? super Dog> dogs1 = new ArrayList<Dog>();
         dogs1.add(new Dog());
         List<? super Dog> dogs2 = new ArrayList<Animal>();
@@ -62,6 +65,7 @@ public class Polymorphism {
 
 
         // 2. declarations for 'extends' and 'super' examples
+        List<Object> objects   = new ArrayList<>(); objects.add(new Animal());
         List<Animal> animals   = new ArrayList<>(); animals.add(new Animal());
         List<Cat> cats         = new ArrayList<>(); cats.add(new Cat());
         List<Manx> manxCats    = new ArrayList<>(); manxCats.add(new Manx());
@@ -70,22 +74,61 @@ public class Polymorphism {
 
 
         // 3. extends
-        // ext(List<? extends Animal> list) => readonly
+        // ext(List<? extends Animal> list) =>    readonly
         ext(animals);
-        // Animal is-an Animal      - OK
+        // Animal is-an Animal                    - OK
         ext(cats);
-        // Cat is-an Animal      - OK
+        // Cat is-an Animal                       - OK
         ext(manxCats);
-        // Manx is-an Animal      - OK
+        // Manx is-an Animal                      - OK
         ext(dogs);
-        // Dog is-an Animal      - OK
+        // Dog is-an Animal                       - OK
         ext(terriers);
-        // Terrier is-an Animal      - OKl is-an Animal      - OK
+        // Terrier is-an Animal                   - OK
 
+
+        // spr(List<? super Cat> list) =>        modifiable
+        spr(objects);
+        // Object is a super type of cat          - OK
+        spr(animals);
+        // Animal is a super type of cat          - OK
+        spr(cats);
+        // Cat is type of cat                     - OK
+//        spr(manxCats);
+//        // Manx is a child type of cat            - compile error
+//        spr(dogs);
+//        // Dog is a child type of Animal          - compile error
+//        spr(terriers);
+//        // Terrier is a child type of Dog         - compile error
     }
 
     public static void ext(List<? extends Animal> list){
 
     }
 
+    public static void spr(List<? super Cat> list){  // The lower-bound is Cat
+        // modifying lower-bound cat - from bottom to Cat
+        // IN: Cat, Animal, Object
+        list.add(new Cat());
+        list.add(new Manx());
+        // The only types that can be safely added are types of Cat (including subtypes)
+        // because the method could be getting in a list of Animal or Object (or Cat)
+
+//        list.add(new Object());    // compiler error - Object is not a Cat ( Cat is an Object )
+//        list.add(new Animal());    // compiler error - Animal is not a Cat ( Cat is an Animal )
+//        list.add(new Dog());       // compiler error - Dog is not a Cat
+//        list.add(new Terrier());   // compiler error - Terrier is not a Cat
+
+//        for(Cat cat: list){         // compile error    -   passed in could be a list of Animal's
+//            System.out.println(cat);
+//        }
+//        for(Animal animal: list){    // compile error    -   passed in could be a list of object's
+//            System.out.println(animal);
+//        }
+
+        // reading lower-bound
+//        for(Object o: list){        // OK               -   the only thing we can safely say is that the 'list'
+//            System.out.println(o);  //                      coming in can be treated as Object
+//        }                           //                      Cat is-an Object, Animal is-an Object, Object is-an Object
+    }
 }
