@@ -126,7 +126,6 @@ public class Polymorphism {
 //            System.out.println(animal);
 //        }
 
-        // reading lower-bound
 //        for(Object o: list){        // OK               -   the only thing we can safely say is that the 'list'
 //            System.out.println(o);  //                      coming in can be treated as Object
 //        }                           //                      Cat is-an Object, Animal is-an Object, Object is-an Object
